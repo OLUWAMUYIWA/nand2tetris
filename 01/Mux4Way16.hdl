@@ -17,7 +17,11 @@ CHIP Mux4Way16 {
 
     PARTS:
     // Put your code here:
-    Mux16(a=a, b=b, sel=sel[0], out=out1);
+    // remember: we start counting bits from the right
+    // send each two through muxes to select based on the lsb
+    Mux16(a=a, b=b, sel=sel[0], out=out1); 
     Mux16(a=c, b=d, sel=sel[0], out=out2);
+    
+    //now that we've eleminated two we'll mux the remaning two with the msb
     Mux16(a=out1, b=out2, sel=sel[1], out=out);
 }

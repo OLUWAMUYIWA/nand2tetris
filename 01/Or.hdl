@@ -16,6 +16,5 @@ CHIP Or {
     PARTS:
     Not(in=a, out=notA);
     Not(in=b, out=notB);
-    And(a=notA, b=notB, out=andNot);
-    Not(in=andNot, out=out);
+    Nand(a=notA, b=notB, out=out); //i.e. Nand(Not(a), Not(b)) = Or(a,b) by de-morgan's law 
 }

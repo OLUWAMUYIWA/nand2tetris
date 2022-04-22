@@ -42,5 +42,27 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+
+    Mux16(a=x, sel=zx, out=x1); //if a pin is not specified it defaults to zero. this multiplexes two inputs: x, and 0
+    Not16(in=x1, out=xNeg);
+    Mux16(a=x1, b=xNeg, sel=nx, out=xOut); // now, choose between the possibly-zeroed x and the possiply-zeroed&negated x
+
+    Mux16(a=y, sel=zy, out=y1);
+    Not16(in=y1, out=yNeg);
+    Mux16(a=y1, b=yNeg, sel=ny, out=yOut);
+
+    Add16(a=xOut, b=yOut, out=added);
+    And16(a=xOut, b=yOut, out=anded);
+    Mux16(a=added, b=anded, sel=f, out=computed);
+
+    Not16(in=computed, out=negated);
+    Mux16(a=computed, b=negated, sel=no, out=out, out[0..7]=out1, out[8..15]=out2);
+
+    // status bits
+    Or8Way(in=out1, out=orred1);
+    Or8Way(in=out2, out=orred2);
+    Or(a=orred1, b=orred2, out=orred);
+    Not(in=orred, out=zr); // output is zero is all the 16 bits orred through return a zero
+    And(a=true, b=out2[7], out=ng); //output is negative if the MSB is set 
+
 }
